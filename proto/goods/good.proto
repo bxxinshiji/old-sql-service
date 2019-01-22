@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package good;
+
+service Goods {
+    // 获取商品信息
+    rpc Get(Good) returns (Response) {}
+}
+
+message Good {
+    string id = 1;// 编码
+    string name = 2;// 名称
+    string scan_code = 3;// 条形码
+    string price = 4;// 价格
+    string standard = 5;// 规格
+}
+
+message Request {
+}
+
+message Response {
+    Good good = 1;
+    repeated Good goods = 2;
+    repeated Error errors = 3;
+}
+
+message Error {
+    int32 code = 1;
+    string description = 2;
+}
