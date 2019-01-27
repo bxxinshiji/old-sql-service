@@ -5,11 +5,12 @@ import (
 	"log"
 	"os"
 
-	db "gitee.com/xsjcs/old-sql-service/providers/database"
+	db "github.com/bxxinshiji/old-sql-service/providers/database"
 
-	// 执行数据迁移
-	pb "gitee.com/xsjcs/old-sql-service/proto/goods"
-	"gitee.com/xsjcs/old-sql-service/service"
+	"github.com/bxxinshiji/old-sql-service/hander"
+	gpb "github.com/bxxinshiji/old-sql-service/proto/goods"
+	ipb "github.com/bxxinshiji/old-sql-service/proto/inventory"
+	"github.com/bxxinshiji/old-sql-service/service"
 	micro "github.com/micro/go-micro"
 )
 
@@ -19,16 +20,22 @@ var (
 )
 
 func main() {
-	// 用户仓库 db 接口实现
-	repo := &service.Repository{db.Engine}
 
 	srv := micro.NewService(
 		micro.Name(serviceName),
 		micro.Version("latest"),
 	)
 	srv.Init()
+
+	// 商品仓库 db 接口实现
+	repoGoods := &service.GoodsRepository{db.Engine}
 	// Register handler
-	pb.RegisterGoodsHandler(srv.Server(), &hander{repo})
+	gpb.RegisterGoodsHandler(srv.Server(), &hander.Goods{repoGoods})
+
+	// 盘点仓库 db 接口实现
+	repoInventory := &service.InventoryRepository{db.Engine}
+	// Register handler
+	ipb.RegisterInventoryHandler(srv.Server(), &hander.Inventory{repoInventory})
 	// Run the server
 	if err := srv.Run(); err != nil {
 		fmt.Println(err)

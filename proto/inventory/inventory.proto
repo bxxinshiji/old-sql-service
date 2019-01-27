@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package good;
+package inventory;
 
-service Goods {
-    // 获取商品信息
-    rpc Get(Good) returns (Response) {}
+service Inventory {
+    // 上报盘点数据
+    rpc Report(Request) returns (Response) {}
 }
 
 message Good {
@@ -13,13 +13,15 @@ message Good {
     string bar_code = 3;// 条形码
     string price = 4;// 价格
     string standard = 5;// 规格
+    string number = 6;// 盘点数量
 }
 
 message Request {
+    repeated Good goods = 1;
 }
 
 message Response {
-    Good good = 1;
+    bool valid = 1;
     repeated Good goods = 2;
     repeated Error errors = 3;
 }

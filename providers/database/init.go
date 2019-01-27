@@ -16,21 +16,22 @@ var (
 
 func init() {
 	var err error
-	Engine, err = txorm.Connection(&txorm.Config{
+	conf := &txorm.Config{
 		Driver: env.Getenv("DB_DRIVER", "odbc"),
 		// Host 主机地址
 		Host: env.Getenv("DB_HOST", "192.168.1.26"),
 		// Port 主机端口
-		Port: env.Getenv("DB_PORT", "1443"),
+		Port: env.Getenv("DB_PORT", "1433"),
 		// User 用户名
 		User: env.Getenv("DB_USER", "sa"),
 		// Password 密码
 		Password: env.Getenv("DB_PASSWORD", ""),
 		// DbName 数据库名称
-		DbName: env.Getenv("DB_NAME", "stmis1"),
+		DbName: env.Getenv("DB_NAME", "bvbv01"),
 		// Charset 数据库编码
 		Charset: env.Getenv("DB_CHARSET", "GBK"),
-	})
+	}
+	Engine, err = txorm.Connection(conf)
 	if err != nil {
 		log.Fatalf("connect error: %v\n", err)
 	}
